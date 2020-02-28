@@ -1,5 +1,5 @@
 secret_key.txt
 ideas.txt
 db.sqlite3
-*__pycache__/*
+__pycache__/
 basic_app/migrations/*
