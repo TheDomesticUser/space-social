@@ -21,4 +21,6 @@ class UserSignUp(CreateView):
         return super(self, UserSignUp).post(self.request)
 
 class UserLogin(LoginView):
-    pass
+    model = models.User
+
+    fields = ['username', 'password']
