@@ -8,6 +8,8 @@ from django.contrib.auth.views import LoginView
 from django.contrib.auth.hashers import make_password
 
 class UserSignUp(CreateView):
+    template_name = 'signup.html'
+
     model = models.User
 
     fields = ['username', 'password']
