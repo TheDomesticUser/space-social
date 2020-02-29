@@ -8,7 +8,7 @@ class User(models.Model):
         return self.username
 
 class Group(models.Model):
-    name = models.CharField(max_length=64)
+    name = models.CharField(max_length=64, unique=True)
     members_count = models.PositiveIntegerField()
     date_created = models.DateField(auto_now_add=True)
 
