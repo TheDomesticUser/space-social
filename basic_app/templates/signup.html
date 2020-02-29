@@ -3,6 +3,12 @@
 {% block title %}Sign Up{% endblock %}
 
 {% block body %}
+  {% if signup_success %}
+    <div class="alert alert-success" role="alert">
+      You have successfully signed up! You can now login to your account.
+    </div>
+  {% endif %}
+
   <h1>Sign up</h1>
   <form method="post">
     {% csrf_token %}

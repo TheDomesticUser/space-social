@@ -1,26 +1,34 @@
 from django.shortcuts import render
 
 from . import models
+from . import forms
 
-# Signup and login functionality
+# signup and login functionality
 from django.views.generic.edit import CreateView
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.hashers import make_password
+
+# url searching through their names
+from django.urls import reverse, reverse_lazy
 
 class UserSignUp(CreateView):
     template_name = 'signup.html'
 
     model = models.User
+    form_class = forms.SignUpForm
 
-    fields = ['username', 'password']
+    def form_valid(self, form):
+        password = make_password(form.instance.password)
+        form.instance.password = password
 
-    def post(self, request):
-        # hash the password
-        password = make_password(request.instance.password)
+        # save the form data
+        form.save()
 
-        request.instance.password = password
-
-        return super(self, UserSignUp).post(self.request)
+        # display the success message on the same signup page
+        return render(self.request, self.template_name, context={
+            'signup_success': True,
+            'form': form
+        })
 
 class UserLogin(LoginView):
     model = models.User
