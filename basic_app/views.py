@@ -4,9 +4,10 @@ from . import models
 from . import forms
 
 # signup and login functionality
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, View
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth import authenticate, login
 
 # url searching through their names
 from django.urls import reverse, reverse_lazy
@@ -32,6 +33,6 @@ class UserSignUp(CreateView):
         })
 
 class UserLogin(LoginView):
-    model = models.User
-
-    fields = ['username', 'password']
+    template_name = 'login.html'
+    authentication_form = forms.LoginForm
+    

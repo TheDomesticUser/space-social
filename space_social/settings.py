@@ -81,6 +81,10 @@ DATABASES = {
     }
 }
 
+# Login functionality
+# https://docs.djangoproject.com/en/3.0/ref/settings/
+LOGIN_URL = '../basic_app/templates/login.html'
+
 # Password hashes
 # https://docs.djangoproject.com/en/3.0/topics/auth/passwords/
 PASSWORD_HASHERS = [
