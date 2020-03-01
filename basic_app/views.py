@@ -18,6 +18,7 @@ class UserSignUp(CreateView):
     form_class = forms.SignUpForm
 
     def form_valid(self, form):
+        # hash the password. argon2 by default
         password = make_password(form.instance.password)
         form.instance.password = password
 

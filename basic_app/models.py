@@ -1,8 +1,12 @@
 from django.db import models
+from django.contrib.auth.models import AbstractBaseUser
 
-class User(models.Model):
+# use django's built in user authentication
+class User(AbstractBaseUser):
     username = models.CharField(max_length=20, unique=True)
     password = models.CharField(max_length=20)
+
+    USERNAME_FIELD = 'username'
     
     def __str__(self):
         return self.username
