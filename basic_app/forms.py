@@ -44,21 +44,3 @@ class LoginForm(forms.Form):
     class Meta:
         model = models.User
         fields = ('username', 'password')
-
-    def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop('request', None)
-        super(LoginForm, self).__init__(*args, **kwargs)
-
-    def get_user(self):
-        # verify the user credentials
-        username = self.cleaned_data['username']
-        password = self.cleaned_data['password']
-
-        user = models.User.objects.filter(username=username).first()
-
-        if user:
-            # check to see if the password matches
-            if (check_password(password, user.password)):
-                return user
-
-        return None

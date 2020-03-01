@@ -3,14 +3,20 @@ from django.shortcuts import render
 from . import models
 from . import forms
 
+# display functionality
+from django.views.generic.base import TemplateView
+
 # signup and login functionality
 from django.views.generic.edit import CreateView, View
 from django.contrib.auth.views import LoginView
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth import authenticate, login
 
 # url searching through their names
 from django.urls import reverse, reverse_lazy
+
+class HomePageView(TemplateView):
+    template_name = 'index.html'
 
 class UserSignUp(CreateView):
     template_name = 'signup.html'
@@ -32,7 +38,35 @@ class UserSignUp(CreateView):
             'form': form
         })
 
-class UserLogin(LoginView):
+class UserLogin(View):
     template_name = 'login.html'
-    authentication_form = forms.LoginForm
-    
+
+    def get(self, request):
+        # display the form
+        form = forms.LoginForm
+
+        return render(request, self.template_name, context={
+            'form': form
+        })
+
+    def post(self, request):
+        # verify valid data
+        form = forms.LoginForm(request.POST)
+
+        if form.is_valid():
+            # verify the user authentication
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+
+            # get the user through its username
+            user = models.User.objects.filter(username=username).first()
+
+            if user:
+                # verify the password is correct
+                if check_password(password, user.password):
+                    # login the user
+                    login(request, user)
+
+                    return render(request, 'https://google.com')
+
+            # incorrect authentication

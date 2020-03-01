@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 
+from django.urls import reverse_lazy
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -83,7 +85,7 @@ DATABASES = {
 
 # Login functionality
 # https://docs.djangoproject.com/en/3.0/ref/settings/
-LOGIN_URL = '../basic_app/templates/login.html'
+LOGIN_URL = reverse_lazy('basic_app.views.login')
 
 # Password hashes
 # https://docs.djangoproject.com/en/3.0/topics/auth/passwords/
