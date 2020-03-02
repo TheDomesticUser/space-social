@@ -15,7 +15,7 @@ class User(AbstractBaseUser):
 
 class Group(models.Model):
     name = models.CharField(max_length=64, unique=True)
-    members_count = models.PositiveIntegerField()
+    members_count = models.PositiveIntegerField(default=0)
     date_created = models.DateField(auto_now_add=True)
 
     def __str__(self):
