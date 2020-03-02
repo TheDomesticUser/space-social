@@ -8,9 +8,9 @@ from django.views.generic.base import TemplateView
 
 # signup and login functionality
 from django.views.generic.edit import CreateView, View
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.hashers import make_password, check_password
-from django.contrib.auth import authenticate, login
 
 # url searching through their names
 from django.urls import reverse, reverse_lazy
@@ -40,3 +40,6 @@ class UserSignUp(CreateView):
 
 class UserLogin(LoginView):
     template_name = 'login.html'
+
+class UserLogout(LoginRequiredMixin, LogoutView):
+    template_name = reverse_lazy('basic_app:user_logout')
