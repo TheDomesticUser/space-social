@@ -85,7 +85,7 @@ DATABASES = {
 
 # Login functionality
 # https://docs.djangoproject.com/en/3.0/ref/settings/
-LOGIN_URL = reverse_lazy('basic_app.views.login')
+AUTH_USER_MODEL = 'basic_app.User'
 
 # Password hashes
 # https://docs.djangoproject.com/en/3.0/topics/auth/passwords/

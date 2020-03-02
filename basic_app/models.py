@@ -1,10 +1,12 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser
+from django.contrib.auth.models import AbstractBaseUser, UserManager
 
 # use django's built in user authentication
 class User(AbstractBaseUser):
     username = models.CharField(max_length=20, unique=True)
     password = models.CharField(max_length=20)
+
+    objects = UserManager()
 
     USERNAME_FIELD = 'username'
     

@@ -3,7 +3,7 @@
 {% block title %}Login{% endblock %}
 
 {% block body %}
-  {% if form.errors %}
+  {% if failed_login %}
     <div class="alert alert-danger" role="alert">
       Your username or password didn't match. Please try again.
     </div>

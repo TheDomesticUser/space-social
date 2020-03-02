@@ -4,4 +4,10 @@
 
 {% block body %}
   <h1>Index</h1>
+
+  {% if user.is_authenticated %}
+    <h1>IS AUTHENTICATED</h1>
+  {% else %}
+    <h1>Failed</h1>
+  {% endif %}
 {% endblock %}

@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from . import models
 from . import forms
@@ -38,35 +38,5 @@ class UserSignUp(CreateView):
             'form': form
         })
 
-class UserLogin(View):
+class UserLogin(LoginView):
     template_name = 'login.html'
-
-    def get(self, request):
-        # display the form
-        form = forms.LoginForm
-
-        return render(request, self.template_name, context={
-            'form': form
-        })
-
-    def post(self, request):
-        # verify valid data
-        form = forms.LoginForm(request.POST)
-
-        if form.is_valid():
-            # verify the user authentication
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-
-            # get the user through its username
-            user = models.User.objects.filter(username=username).first()
-
-            if user:
-                # verify the password is correct
-                if check_password(password, user.password):
-                    # login the user
-                    login(request, user)
-
-                    return render(request, 'https://google.com')
-
-            # incorrect authentication
