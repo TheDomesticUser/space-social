@@ -7,10 +7,14 @@ from . import forms
 from django.views.generic.base import TemplateView
 
 # signup and login functionality
-from django.views.generic.edit import CreateView, View
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.hashers import make_password, check_password
+from django.contrib.auth.hashers import make_password
+
+# display views
+from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
 
 # url searching through their names
 from django.urls import reverse, reverse_lazy
@@ -43,3 +47,17 @@ class UserLogin(LoginView):
 
 class UserLogout(LoginRequiredMixin, LogoutView):
     template_name = reverse_lazy('basic_app:user_logout')
+
+class CreateGroup(LoginRequiredMixin, CreateView):
+    template_name = 'create_group.html'
+
+    model = models.Group
+    fields = ['name']
+
+    def get_success_url(self):
+        return reverse('basic_app:groups_list')
+
+class ListGroups(ListView):
+    template_name = 'list_groups.html'
+    
+    model = models.Group
