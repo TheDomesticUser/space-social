@@ -3,6 +3,9 @@ from django.shortcuts import render, redirect
 from . import models
 from . import forms
 
+# http responses
+from django.http import HttpResponseRedirect
+
 # display functionality
 from django.views.generic.base import TemplateView
 
@@ -54,10 +57,21 @@ class CreateGroup(LoginRequiredMixin, CreateView):
     model = models.Group
     fields = ['name']
 
-    def get_success_url(self):
-        return reverse('basic_app:groups_list')
+    def form_valid(self, form):
+        user = self.request.user
+        group = models.Group(name=form.cleaned_data['name'])
+
+        # save the group
+        group.save()
+
+        # set the user group relation
+        assocation = models.Association(is_leader=True, group=group, member=user)
+        assocation.save()
+
+        return HttpResponseRedirect(reverse('basic_app:groups_list'))
 
 class ListGroups(ListView):
     template_name = 'list_groups.html'
     
     model = models.Group
+
