@@ -13,6 +13,16 @@
   <!-- Display delete group functionality only for the leader -->
   {% if object.leader == user %}
     <a href="{% url 'basic_app:delete_group' pk=object.pk %}">Delete group</a>
+  {% else %}
+    {% if already_joined %}
+      
+    {% else %}
+      <form action="{% url 'basic_app:join_group' pk=group.pk %}" method="post">
+        {% csrf_token %}
+
+        <input type="submit" value="Join Group">
+      </form>
+    {% endif %}
   {% endif %}
 
   <!-- Display the posts -->

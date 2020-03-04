@@ -80,7 +80,27 @@ class GroupDetailView(DetailView):
 
     model = models.Group
 
-class DeleteGroup(DeleteView):
+    def get_context_data(self, **kwargs):
+        # call the base implementation first to be able to set key values
+        context = super().get_context_data(**kwargs)
+
+        # get the user and group
+        user = self.request.user
+        group = self.get_object()
+
+        # verify if the user is not in the group. If not, display join group btn
+        assocation = models.Association.objects.filter(
+            member=user,
+            group=group
+        ).first()
+
+        if assocation:
+            context['already_joined'] = True
+
+            return context
+        return context
+
+class DeleteGroup(LoginRequiredMixin, DeleteView):
     template_name = 'group_confirm_delete.html'
 
     model = models.Group
@@ -108,7 +128,7 @@ class DeleteGroup(DeleteView):
         # continue everything as usual if correct authentication
         return super().post(request, *args, **kwargs)
 
-class JoinGroup(View):
+class JoinGroup(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         # set the group to user assocation
         user = request.user
