@@ -3,11 +3,13 @@
 {% block title %}Home{% endblock %}
 
 {% block body %}
-  <h1>Index</h1>
+  <h1>Home</h1>
 
   {% if user.is_authenticated %}
-    <h1>IS AUTHENTICATED</h1>
-  {% else %}
-    <h1>Failed</h1>
+    <!-- Display users recent posts, and groups he/she is in -->
+    <h1>Groups</h1>
+    {% for assn in object_list %}
+      <h1>{{ assn.group.name }}</h1>
+    {% endfor %}
   {% endif %}
 {% endblock %}

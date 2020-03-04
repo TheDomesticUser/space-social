@@ -25,6 +25,18 @@ from django.urls import reverse, reverse_lazy
 class HomePageView(TemplateView):
     template_name = 'index.html'
 
+    def get_context_data(self, **kwargs):
+        user = self.request.user
+
+        # display the users information if logged in
+        if user.is_authenticated:
+            # list of groups he/she is in
+            assns = models.Association.objects.filter(member=user)
+
+            kwargs['object_list'] = assns
+
+        return super().get_context_data(**kwargs)
+
 class UserSignUp(CreateView):
     template_name = 'signup.html'
 
