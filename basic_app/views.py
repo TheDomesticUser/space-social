@@ -134,8 +134,13 @@ class JoinGroup(LoginRequiredMixin, View):
         user = request.user
         group = models.Group.objects.get(pk=kwargs['pk'])
 
-        assocation = models.Association(member=user, group=group)
-        assocation.save()
+        # verify the association already exists to avoid duplicates
+        assnCheck = models.Association.objects.filter(member=user, group=group)
+        
+        if not assnCheck.exists():
+            # save the instance
+            assn = models.Association(member=user, group=group)
+            assn.save()
 
         # redirect the user to the group he/she joined
         return redirect(reverse('basic_app:group_detail', kwargs={ 'pk': group.pk }))
