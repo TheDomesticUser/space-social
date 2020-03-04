@@ -4,7 +4,11 @@
 
 {% block body %}
   {% if not user.is_authenticated %}
-    <p>You are not logged in. Log in to post!</p>
+    <p>
+      You are not signed in. 
+        <a href="{% url 'basic_app:user_signup' %}">Sign up</a>
+      to join groups!
+    </p>
   {% else %}
     <button>
       <a href="{% url 'basic_app:create_group' %}" class="link">
