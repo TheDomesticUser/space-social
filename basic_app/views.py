@@ -10,7 +10,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic.base import TemplateView
 
 # signup and login functionality
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView, View
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.hashers import make_password
@@ -107,3 +107,15 @@ class DeleteGroup(DeleteView):
         
         # continue everything as usual if correct authentication
         return super().post(request, *args, **kwargs)
+
+class JoinGroup(View):
+    def post(self, request, *args, **kwargs):
+        # set the group to user assocation
+        user = request.user
+        group = models.Group.objects.get(pk=kwargs['pk'])
+
+        assocation = models.Association(member=user, group=group)
+        assocation.save()
+
+        # redirect the user to the group he/she joined
+        return redirect(reverse('basic_app:group_detail', kwargs={ 'pk': group.pk }))

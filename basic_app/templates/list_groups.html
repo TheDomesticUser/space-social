@@ -20,5 +20,10 @@
       </a>
     </h1>
     <p>Members: {{ group.members_count }}</p>
+    <form action="{% url 'basic_app:join_group' pk=group.pk %}" method="post">
+      {% csrf_token %}
+
+      <input type="submit" value="Join Group">
+    </form>
   {% endfor %}
 {% endblock %}
