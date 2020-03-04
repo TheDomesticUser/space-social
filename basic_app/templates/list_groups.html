@@ -14,7 +14,11 @@
   {% endif %}
 
   {% for group in object_list %}
-    <h1>Group Name: {{ group.name }}</h1>
+    <h1>
+      <a href="{% url 'basic_app:group_detail' pk=group.pk %}" class="href">
+        {{ group.name }}
+      </a>
+    </h1>
     <p>Members: {{ group.members_count }}</p>
   {% endfor %}
 {% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+  <h1>Group Detail</h1>
+
+  <h1>{{ object.name }}</h1>
+  <p>Leader: {{ object.leader.username }}</p>
+  <p>Members: {{ object.members_count }}</p>
+  <p>Date Created: {{ object.date_created }}</p>
+
+  <!-- Display delete group functionality only for the leader -->
+  {% if object.leader == user %}
+    <a href="{% url 'basic_app:delete_group' pk=object.pk %}">Delete group</a>
+  {% endif %}
+
+  <!-- Display the posts -->
+{% endblock %}

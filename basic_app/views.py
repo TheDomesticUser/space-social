@@ -4,7 +4,7 @@ from . import models
 from . import forms
 
 # http responses
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 
 # display functionality
 from django.views.generic.base import TemplateView
@@ -59,13 +59,13 @@ class CreateGroup(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         user = self.request.user
-        group = models.Group(name=form.cleaned_data['name'])
+        group = models.Group(name=form.cleaned_data['name'], leader=user)
 
         # save the group
         group.save()
 
         # set the user group relation
-        assocation = models.Association(is_leader=True, group=group, member=user)
+        assocation = models.Association(group=group, member=user)
         assocation.save()
 
         return HttpResponseRedirect(reverse('basic_app:groups_list'))
@@ -75,3 +75,35 @@ class ListGroups(ListView):
     
     model = models.Group
 
+class GroupDetailView(DetailView):
+    template_name = 'group_detail.html'
+
+    model = models.Group
+
+class DeleteGroup(DeleteView):
+    template_name = 'group_confirm_delete.html'
+
+    model = models.Group
+    success_url = reverse_lazy('basic_app:groups_list')
+
+    def get(self, request, *args, **kwargs):
+        # confirm the get request was sent by the leader
+        groupLeader = self.get_object().leader
+
+        if groupLeader != request.user:
+            # show a standard 401 access denied page
+            return HttpResponse('<h1>Access Denied.</h1>', status=401)
+
+        # continue everything as usual if correct authentication
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        # confirm the post request was sent by the leader
+        groupLeader = self.get_object().leader
+        
+        if groupLeader != request.user:
+            # show a standard 401 unauthorized access page
+            return HttpResponse('<h1>Something went wrong.</h1>', status=401)
+        
+        # continue everything as usual if correct authentication
+        return super().post(request, *args, **kwargs)
