@@ -164,6 +164,10 @@ class JoinGroup(LoginRequiredMixin, View):
         assnCheck = models.Association.objects.filter(member=user, group=group)
         
         if not assnCheck.exists():
+            # increment the members count on the group
+            group.members_count += 1
+            group.save()
+
             # save the instance
             assn = models.Association(member=user, group=group)
             assn.save()
