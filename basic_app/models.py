@@ -25,7 +25,7 @@ class Group(models.Model):
 class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
-    content = models.CharField(max_length=1024)
+    contents = models.CharField(max_length=1024)
     datetime_posted = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
