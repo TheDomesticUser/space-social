@@ -156,3 +156,18 @@ class JoinGroup(LoginRequiredMixin, View):
 
         # redirect the user to the group he/she joined
         return redirect(reverse('basic_app:group_detail', kwargs={ 'pk': group.pk }))
+
+class CreatePost(View):
+    def post(self, request, *args, **kwargs):
+        group_pk = kwargs['pk']
+
+        # get the post data
+        author = request.user
+        group = models.Group.objects.filter(pk=group_pk).first()
+        post_contents = request.POST['post_contents']
+
+        # save the post data in the model
+        post = models.Post(author=author, group=group, contents=post_contents)
+        post.save()
+
+        return redirect(reverse('basic_app:group_detail', kwargs={ 'pk': group_pk }))

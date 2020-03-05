@@ -10,22 +10,27 @@
   <p>Members: {{ object.members_count }}</p>
   <p>Date Created: {{ object.date_created }}</p>
 
-  {% if user.is_authenticated %}
-    <!-- Display delete group functionality only for the leader -->
-    {% if object.leader == user %}
-      <a href="{% url 'basic_app:delete_group' pk=object.pk %}">Delete group</a>
-    {% else %}
-      {% if already_joined %}
-        <h1>Already Joined</h1>
-      {% else %}
-        <form action="{% url 'basic_app:join_group' pk=group.pk %}" method="post">
-          {% csrf_token %}
 
-          <input type="submit" value="Join Group">
-        </form>
+    {% if not already_joined %}
+      <form action="{% url 'basic_app:join_group' pk=group.pk %}" method="post">
+        {% csrf_token %}
+
+        <input type="submit" value="Join Group">
+      </form>
+    {% else %}
+      {% if object.leader == user %}
+        <!-- Display delete group functionality only for the leader -->
+        <a href="{% url 'basic_app:delete_group' pk=object.pk %}">Delete group</a>
       {% endif %}
+      <br>
+
+      <form action="{% url 'basic_app:create_post' pk=object.pk %}" method="post">
+        {% csrf_token %}
+        <textarea name="post_contents" cols="30" rows="5"></textarea>
+
+        <input type="submit" value="Post">
+      </form>
     {% endif %}
 
     <!-- Display the posts -->
-  {% endif %}
 {% endblock %}
