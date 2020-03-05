@@ -4,6 +4,11 @@ https://sed.am
 https://mkrtchyan.ga
 ================================================================================================= */
 
+/* Change all of the text colour to synchronize with the background */
+h1, h2, h3, h4, h5, h6, p {
+    color: white;
+}
+
 /* Move the navbar to the front */
 nav#navs {
     z-index: 1;
