@@ -43,6 +43,13 @@ class UserSignUp(CreateView):
     model = models.User
     form_class = forms.SignUpForm
 
+    def get(self, request):
+        # redirect user to home page if already authenticated
+        if request.user.is_authenticated:
+            return redirect(reverse('basic_app:home'))
+
+        return super().get(request)
+
     def form_valid(self, form):
         # hash the password. argon2 by default
         password = make_password(form.instance.password)
@@ -59,6 +66,13 @@ class UserSignUp(CreateView):
 
 class UserLogin(LoginView):
     template_name = 'login.html'
+
+    def get(self, request):
+        # redirect the user to the home page if already authenticated
+        if request.user.is_authenticated:
+            return redirect(reverse('basic_app:home'))
+        
+        return super().get(request)
 
 class UserLogout(LoginRequiredMixin, LogoutView):
     template_name = reverse_lazy('basic_app:user_logout')
