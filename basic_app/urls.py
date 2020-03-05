@@ -13,5 +13,6 @@ urlpatterns = [
     re_path(r'^group/(?P<pk>\d+)/$', views.GroupDetailView.as_view(), name='group_detail'),
     re_path(r'^group/(?P<pk>\d+)/delete/$', views.DeleteGroup.as_view(), name='delete_group'),
     re_path(r'^group/(?P<pk>\d+)/join/$', views.JoinGroup.as_view(), name='join_group'),
+    re_path(r'^group/(?P<pk>\d+)/leave/$', views.LeaveGroup.as_view(), name='leave_group'),
     re_path(r'^group/(?P<pk>\d+)/post/$', views.CreatePost.as_view(), name='create_post'),
 ]

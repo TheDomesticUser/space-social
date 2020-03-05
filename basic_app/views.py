@@ -175,6 +175,24 @@ class JoinGroup(LoginRequiredMixin, View):
         # redirect the user to the group he/she joined
         return redirect(reverse('basic_app:group_detail', kwargs={ 'pk': group.pk }))
 
+class LeaveGroup(LoginRequiredMixin, TemplateView):
+    template_name = 'group_confirm_leave.html'
+
+    def post(self, request, *args, **kwargs):
+        # get the user and group info
+        user = request.user
+        group = models.Group.objects.get(pk=kwargs['pk'])
+
+        # remove the user to group assocation
+        assn = models.Association.objects.get(member=user, group=group)
+        assn.delete()
+
+        # decrement the group member count
+        group.members_count -= 1
+        group.save()
+
+        return redirect(reverse('basic_app:groups_list'))
+
 class CreatePost(View):
     def post(self, request, *args, **kwargs):
         group_pk = kwargs['pk']
