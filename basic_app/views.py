@@ -106,6 +106,27 @@ class ListGroups(ListView):
     
     model = models.Group
 
+    def get(self, request, *args, **kwargs):
+        joinedGroupsIds = []
+
+        # only display the groups the user is not in
+        user = request.user
+
+        # get all of the assocations
+        assns = models.Association.objects.filter(member=user)
+
+        # append each group id in the association
+        for assn in assns:
+            joinedGroupsIds.append(assn.group.id)
+
+        # filter out all of the groups the user is in
+        filteredGroups = models.Group.objects.exclude(id__in=joinedGroupsIds)
+
+        # display the filtered groups
+        return render(request, self.template_name, context={
+            'object_list': filteredGroups
+        })
+
 class GroupDetailView(DetailView):
     template_name = 'group_detail.html'
 
