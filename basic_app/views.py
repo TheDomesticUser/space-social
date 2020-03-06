@@ -22,6 +22,9 @@ from django.views.generic.detail import DetailView
 # url searching through their names
 from django.urls import reverse, reverse_lazy
 
+# python moduels
+import random
+
 class HomePageView(TemplateView):
     template_name = 'index.html'
 
@@ -30,10 +33,12 @@ class HomePageView(TemplateView):
 
         # display the users information if logged in
         if user.is_authenticated:
-            # list of groups he/she is in
-            assns = models.Association.objects.filter(member=user)
+            # display a list of 5 random groups the user is in
+            assns = list(models.Association.objects.filter(member=user))
 
-            kwargs['object_list'] = assns
+            random.shuffle(assns)
+            
+            kwargs['object_list'] = assns[:3]
 
         return super().get_context_data(**kwargs)
 

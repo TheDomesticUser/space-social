@@ -3,13 +3,38 @@
 {% block title %}Home{% endblock %}
 
 {% block body %}
-  <h1>Home</h1>
+  <h1>Home Page</h1>
 
   {% if user.is_authenticated %}
+    <p>Currently authenticated as {{ user.username }}</p>
+
     <!-- Display users recent posts, and groups he/she is in -->
-    <h1>Groups</h1>
-    {% for assn in object_list %}
-      <h1>{{ assn.group.name }}</h1>
-    {% endfor %}
+    <h2>Groups</h2>
+
+      {% if object_list %}
+
+          {% for assn in object_list %}
+            <div class="card bg-dark mb-3" style="width: 18rem;">
+              <div class="card-body">
+                <h5 class="card-title">
+                  <a href="{% url 'basic_app:group_detail' pk=assn.group.id %}">
+                    {{ assn.group.name }}
+                  </a>
+                </h5>
+                <p class="card-text">Members: {{ assn.group.members_count }}</p>
+                <a href="#" class="btn btn-primary">Go somewhere</a>
+              </div>
+            </div>
+          {% endfor %}
+
+      {% else %}
+        <p>You are currently not in any groups.</p>
+      {% endif %}
+  {% else %}
+    <p>
+      You are currently not signed in.
+        <a href="{% url 'basic_app:user_signup' %}">Sign up</a> 
+      for full features!
+    </p>
   {% endif %}
 {% endblock %}
