@@ -183,6 +183,10 @@ class LeaveGroup(LoginRequiredMixin, TemplateView):
         user = request.user
         group = models.Group.objects.get(pk=kwargs['pk'])
 
+        # only non-leaders can leave groups. Owners can only delete groups
+        if group.leader == user:
+            return HttpResponse('<h1>Only non-owners of the group can leave!</h1>')
+
         # remove the user to group assocation
         assn = models.Association.objects.get(member=user, group=group)
         assn.delete()
