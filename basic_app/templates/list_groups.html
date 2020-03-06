@@ -16,13 +16,23 @@
       </a>
     </button>
   {% endif %}
-
   {% for group in object_list %}
-    <h1>
-      <a href="{% url 'basic_app:group_detail' pk=group.pk %}" class="href">
-        {{ group.name }}
-      </a>
-    </h1>
-    <p>Members: {{ group.members_count }}</p>
+
+    <div class="card bg-dark mb-2" style="width: 18rem;">
+      <div class="card-body">
+        <h5 class="card-title">
+          <a href="{% url 'basic_app:group_detail' pk=group.id %}">
+            {{ group.name }}
+          </a>
+        </h5>
+        <p class="card-text">Members: {{ group.members_count }}</p>
+        <form action="{% url 'basic_app:join_group' pk=group.id %}" method="post">
+          {% csrf_token %}
+
+          <input class="btn btn-primary" type="submit" value="Join Group">
+        </form>
+      </div>
+    </div>
+
   {% endfor %}
 {% endblock %}
