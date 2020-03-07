@@ -4,4 +4,3 @@ db.sqlite3
 __pycache__/
 basic_app/migrations/*
 .vscode/
-node_modules/*
