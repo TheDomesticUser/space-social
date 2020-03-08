@@ -24,6 +24,8 @@ class SignUpForm(ModelForm):
     )
     verify_password = forms.CharField(widget=forms.PasswordInput)
 
+    # all users can be in a maximum of up to 5 groups
+
     class Meta:
         model = models.User
         fields = ('username', 'password')

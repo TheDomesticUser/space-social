@@ -5,6 +5,9 @@ from django.contrib.auth.models import AbstractBaseUser, UserManager
 class User(AbstractBaseUser):
     username = models.CharField(max_length=20, unique=True)
     password = models.CharField(max_length=20)
+    group_count = models.PositiveIntegerField(default=0)
+    max_groups = models.PositiveIntegerField(default=5)
+    # last login is included by default
 
     objects = UserManager()
 

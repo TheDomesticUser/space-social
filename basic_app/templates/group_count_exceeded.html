@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block title %}Group Count Exceeded{% endblock %}
+
+{% block body %}
+  <h3>
+    You can only be in a maximum of {{ user.max_groups }} groups.
+    You need to leave or delete a group, depending if you are the leader or not.
+  </h3>
+{% endblock %}

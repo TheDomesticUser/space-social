@@ -22,7 +22,10 @@ from django.views.generic.detail import DetailView
 # url searching through their names
 from django.urls import reverse, reverse_lazy
 
-# python moduels
+# validation
+from django.core.exceptions import ValidationError
+
+# python modules
 import random
 
 class HomePageView(TemplateView):
@@ -33,12 +36,10 @@ class HomePageView(TemplateView):
 
         # display the users information if logged in
         if user.is_authenticated:
-            # display a list of 5 random groups the user is in
-            assns = list(models.Association.objects.filter(member=user))
+            # display all the groups the user is in
+            assns = models.Association.objects.filter(member=user)
 
-            random.shuffle(assns)
-            
-            kwargs['object_list'] = assns[:3]
+            kwargs['object_list'] = assns
 
         return super().get_context_data(**kwargs)
 
@@ -90,16 +91,25 @@ class CreateGroup(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         user = self.request.user
-        group = models.Group(name=form.cleaned_data['name'], leader=user)
 
-        # save the group
+        # verify max group limit is not exceeded
+        user.group_count += 1
+
+        if user.group_count > 5:
+            return redirect(reverse('basic_app:max_group_count'))
+
+        # increase group count by 1
+        user.save()
+
+        # set group in database
+        group = models.Group(name=form.cleaned_data['name'], leader=user)
         group.save()
 
         # set the user group relation
         assocation = models.Association(group=group, member=user)
         assocation.save()
 
-        return HttpResponseRedirect(reverse('basic_app:groups_list'))
+        return redirect(reverse('basic_app:group_detail', kwargs={ 'pk': group.pk }))
 
 class ListGroups(ListView):
     template_name = 'list_groups.html'
@@ -184,6 +194,16 @@ class JoinGroup(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         # set the group to user assocation
         user = request.user
+
+        # verify max group limit is not exceeded
+        user.group_count += 1
+
+        if user.group_count > 5:
+            return redirect(reverse('basic_app:max_group_count'))
+
+        # increase group count by 1
+        user.save()
+
         group = models.Group.objects.get(pk=kwargs['pk'])
 
         # verify the association already exists to avoid duplicates
@@ -224,6 +244,7 @@ class LeaveGroup(LoginRequiredMixin, TemplateView):
         return redirect(reverse('basic_app:groups_list'))
 
 class CreatePost(View):
+
     def post(self, request, *args, **kwargs):
         group_pk = kwargs['pk']
 
@@ -237,3 +258,6 @@ class CreatePost(View):
         post.save()
 
         return redirect(reverse('basic_app:group_detail', kwargs={ 'pk': group_pk }))
+
+class MaxGroupCount(TemplateView):
+    template_name = 'group_count_exceeded.html'
