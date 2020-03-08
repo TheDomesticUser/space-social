@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load staticfiles %}
+
 {% block title %}Groups{% endblock %}
 
 {% block body %}
@@ -10,21 +12,23 @@
       to join groups!
     </p>
   {% else %}
-    <button>
-      <a href="{% url 'basic_app:create_group' %}" class="link">
-        Create a group!
-      </a>
-    </button>
+    <h1>Recommended</h1>
+
+    <a class="btn btn-success mt-2" href="{% url 'basic_app:create_group' %}">
+      Create a group
+      <img src="{% static 'basic_app/icons/pencil.svg' %}" alt="Failed" height="25" width="25">
+    </a>
   {% endif %}
   {% for group in object_list %}
 
-    <div class="card bg-dark mb-2" style="width: 18rem;">
+    <div class="card bg-dark mt-3" style="width: 18rem;">
       <div class="card-body">
-        <h5 class="card-title">
+        <h4 class="card-title">
           <a href="{% url 'basic_app:group_detail' pk=group.id %}">
             {{ group.name }}
           </a>
-        </h5>
+        </h4>
+        <h6>Owned by {{ group.leader.username }}</h6>
         <p class="card-text">Members: {{ group.members_count }}</p>
         <form action="{% url 'basic_app:join_group' pk=group.id %}" method="post">
           {% csrf_token %}
