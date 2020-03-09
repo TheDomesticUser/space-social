@@ -7,8 +7,12 @@
 {% block body %}
   <form method="post">
     {% csrf_token %}
-    <p>Are you sure you want to delete {{ object.name }}?</p>
+    <p>Are you sure you want to delete
+      <a href="{% url 'basic_app:group_detail' pk=object.id %}">
+        {{ object.name }}?
+      </a>
+    </p>
 
-    <input type="submit" value="Confirm">
+    <input class="btn btn-danger" type="submit" value="Confirm">
   </form>
 {% endblock %}
