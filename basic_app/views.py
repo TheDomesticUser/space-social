@@ -186,6 +186,10 @@ class DeleteGroup(LoginRequiredMixin, DeleteView):
         if groupLeader != request.user:
             # show a standard 401 unauthorized access page
             return HttpResponse('<h1>Something went wrong.</h1>', status=401)
+
+        # reduce the users group count
+        groupLeader.group_count -= 1
+        groupLeader.save()
         
         # continue everything as usual if correct authentication
         return super().post(request, *args, **kwargs)
@@ -232,6 +236,10 @@ class LeaveGroup(LoginRequiredMixin, TemplateView):
         # only non-leaders can leave groups. Owners can only delete groups
         if group.leader == user:
             return HttpResponse('<h1>Only non-owners of the group can leave!</h1>')
+
+        # decrement the users group count
+        user.group_count -= 1
+        user.save()
 
         # remove the user to group assocation
         assn = models.Association.objects.get(member=user, group=group)
