@@ -155,13 +155,17 @@ class GroupDetailView(DetailView):
         group = self.get_object()
 
         # verify if the user is not in the group. If not, display join group btn
-        assocation = models.Association.objects.filter(
+        assn = models.Association.objects.filter(
             member=user,
             group=group
         ).first()
 
-        if assocation:
+        # get all of the posts in the group
+        groupPosts = models.Post.objects.filter(group=group)
+
+        if assn:
             context['already_joined'] = True
+            context['posts_list'] = groupPosts
 
             return context
         return context
@@ -256,7 +260,6 @@ class LeaveGroup(LoginRequiredMixin, TemplateView):
         return redirect(reverse('basic_app:groups_list'))
 
 class CreatePost(View):
-
     def post(self, request, *args, **kwargs):
         group_pk = kwargs['pk']
 

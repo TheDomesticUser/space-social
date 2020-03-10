@@ -5,32 +5,47 @@
 {% block body %}
   <h1>Group Detail</h1>
 
-  <h1>{{ object.name }}</h1>
-  <p>Leader: {{ object.leader.username }}</p>
-  <p>Members: {{ object.members_count }}</p>
-  <p>Date Created: {{ object.date_created }}</p>
+  <div class="d-flex justify-content-between">
+    <div id="detail">
+      <h1>{{ object.name }}</h1>
+      <p>Leader: {{ object.leader.username }}</p>
+      <p>Members: {{ object.members_count }}</p>
+      <p>Date Created: {{ object.date_created }}</p>
 
+      {% if not already_joined %}
+        <form action="{% url 'basic_app:join_group' pk=group.pk %}" method="post">
+          {% csrf_token %}
 
-    {% if not already_joined %}
-      <form action="{% url 'basic_app:join_group' pk=group.pk %}" method="post">
-        {% csrf_token %}
+          <input class="btn btn-success" type="submit" value="Join Group">
+        </form>
+      {% else %}
+        {% if object.leader == user %}
+          <!-- Display delete group functionality only for the leader -->
+          <a class="btn btn-danger mb-3" href="{% url 'basic_app:delete_group' pk=object.pk %}">Delete group</a>
+        {% endif %}
+        <br>
 
-        <input class="btn btn-success" type="submit" value="Join Group">
-      </form>
-    {% else %}
-      {% if object.leader == user %}
-        <!-- Display delete group functionality only for the leader -->
-        <a href="{% url 'basic_app:delete_group' pk=object.pk %}">Delete group</a>
+        <form action="{% url 'basic_app:create_post' pk=object.pk %}" method="post">
+          {% csrf_token %}
+          <textarea name="post_contents" cols="30" rows="5"></textarea>
+
+          <input class="btn btn-primary" type="submit" value="Post">
+        </form>
       {% endif %}
-      <br>
+      </div>
 
-      <form action="{% url 'basic_app:create_post' pk=object.pk %}" method="post">
-        {% csrf_token %}
-        <textarea name="post_contents" cols="30" rows="5"></textarea>
+      <div id="posts_list">
+        {% for post in posts_list %}
+          <div class="card bg-dark mb-3" style="width: 38rem;">
+            <div class="card-body">
+              <h5 class="card-title">{{ post.author.username }}</h5>
+              <p class="card-text">{{ post.contents }}</p>
+              <a href="#" class="btn btn-primary">Go somewhere</a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
 
-        <input class="btn btn-primary" type="submit" value="Post">
-      </form>
-    {% endif %}
-
-    <!-- Display the posts -->
+    <!-- Display all of the posts in the group -->
 {% endblock %}
