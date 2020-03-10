@@ -198,7 +198,10 @@ class DeleteGroup(LoginRequiredMixin, DeleteView):
         # reduce the users group count
         groupLeader.group_count -= 1
         groupLeader.save()
-        
+
+        # all posts and associations referring to this group are automatically
+        # removed due to models.CASCADE
+
         # continue everything as usual if correct authentication
         return super().post(request, *args, **kwargs)
 
@@ -274,7 +277,6 @@ class CreatePost(View):
 
         return redirect(reverse('basic_app:group_detail', kwargs={ 'pk': group_pk }))
 
-# remember to remove all posts when group is deleted
 class DeletePost(DeleteView):
     template_name = 'post_confirm_delete.html'
 
