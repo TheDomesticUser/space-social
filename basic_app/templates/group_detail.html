@@ -15,7 +15,7 @@
       <form action="{% url 'basic_app:join_group' pk=group.pk %}" method="post">
         {% csrf_token %}
 
-        <input type="submit" value="Join Group">
+        <input class="btn btn-success" type="submit" value="Join Group">
       </form>
     {% else %}
       {% if object.leader == user %}
@@ -28,7 +28,7 @@
         {% csrf_token %}
         <textarea name="post_contents" cols="30" rows="5"></textarea>
 
-        <input type="submit" value="Post">
+        <input class="btn btn-primary" type="submit" value="Post">
       </form>
     {% endif %}
 
