@@ -280,6 +280,30 @@ class DeletePost(DeleteView):
 
     model = models.Post
 
+    def get(self, request, *args, **kwargs):
+        # verify the post author is the authenticated user or 
+        # the authenticated user is the leader of the group
+        user = request.user
+        postAuthor = self.get_object().author
+        leader = self.get_object().group.leader
+
+        if user != postAuthor and user != leader:
+            return HttpResponse('<h1>Access Denied.</h1>', status=401)
+
+        return super().get(request, *args, **kwargs)
+        
+    def post(self, request, *args, **kwargs):
+        # verify the post author is the authenticated user or 
+        # the authenticated user is the leader of the group
+        user = request.user
+        postAuthor = self.get_object().author
+        leader = self.get_object().group.leader
+
+        if user != postAuthor and user != leader:
+            return HttpResponse('<h1>Something went wrong.</h1>', status=401)
+
+        return super().post(request, *args, **kwargs)
+
     def get_success_url(self):
         # redirect back to the group containing the deleted post
         return reverse('basic_app:group_detail',
