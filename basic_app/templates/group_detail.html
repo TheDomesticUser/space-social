@@ -39,8 +39,21 @@
           <div class="card bg-dark mb-3" style="width: 38rem;">
             <div class="card-body">
               <h5 class="card-title">{{ post.author.username }}</h5>
-              <p class="card-text">{{ post.contents }}</p>
-              <a href="#" class="btn btn-primary">Go somewhere</a>
+
+              <div class="d-flex justify-content-between">
+                <div>
+                  <p class="card-text">{{ post.contents }}</p>
+                </div>
+
+                <!-- Group owners and post owners can delete their posts -->
+                {% if post.author == user or post.group.leader == user %}
+                  <div>
+                    <a class="btn btn-danger" href="{% url 'basic_app:delete_post' pk=post.id %}">
+                      Delete post
+                    </a>
+                  </div>
+                {% endif %}
+              </div>
             </div>
           </div>
         {% endfor %}

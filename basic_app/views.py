@@ -274,5 +274,17 @@ class CreatePost(View):
 
         return redirect(reverse('basic_app:group_detail', kwargs={ 'pk': group_pk }))
 
+# remember to remove all posts when group is deleted
+class DeletePost(DeleteView):
+    template_name = 'post_confirm_delete.html'
+
+    model = models.Post
+
+    def get_success_url(self):
+        # redirect back to the group containing the deleted post
+        return reverse('basic_app:group_detail',
+            kwargs={ 'pk': self.object.group.id }
+        )
+
 class MaxGroupCount(TemplateView):
     template_name = 'group_count_exceeded.html'
