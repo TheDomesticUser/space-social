@@ -117,6 +117,10 @@ class ListGroups(ListView):
     model = models.Group
 
     def get(self, request, *args, **kwargs):
+        # display all groups if user is anonymous
+        if not request.user.is_authenticated:
+            return super().get(request, *args, **kwargs)
+
         joinedGroupsIds = []
 
         # only display the groups the user is not in
