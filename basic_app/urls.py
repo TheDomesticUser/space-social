@@ -15,6 +15,6 @@ urlpatterns = [
     re_path(r'^group/(?P<pk>\d+)/join/$', views.JoinGroup.as_view(), name='join_group'),
     re_path(r'^group/(?P<pk>\d+)/leave/$', views.LeaveGroup.as_view(), name='leave_group'),
     re_path(r'^group/(?P<pk>\d+)/post/$', views.CreatePost.as_view(), name='create_post'),
-    re_path(r'^group/(?P<pk>\d+)/post/delete/$', views.DeletePost.as_view(), name='delete_post'),
+    re_path(r'^posts/(?P<pk>\d+)/delete/$', views.DeletePost.as_view(), name='delete_post'),
     path('max_groups', views.MaxGroupCount.as_view(), name='max_group_count'),
 ]
