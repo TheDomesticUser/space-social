@@ -6,7 +6,17 @@
   <h1>Create Group</h1>
   <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+
+    <p>
+      {{ form.name.label }}
+      {{ form.name }}
+
+      {% if form.name.errors %}
+        {% for error in form.name.errors %}
+          <p class="error">{{ error }}</p>
+        {% endfor %}
+      {% endif %}
+    </p>
 
     <input class="btn btn-primary" type="submit" value="Create">
   </form>
