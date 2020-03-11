@@ -266,16 +266,24 @@ class CreatePost(View):
     def post(self, request, *args, **kwargs):
         group_pk = kwargs['pk']
 
+        groupDetailPath = reverse('basic_app:group_detail', kwargs={
+            'pk': group_pk
+        })
+
         # get the post data
         author = request.user
         group = models.Group.objects.filter(pk=group_pk).first()
         post_contents = request.POST['post_contents']
 
+        # verify the post contents length is greater than 0
+        if len(post_contents) == 0:
+            return redirect(groupDetailPath)
+
         # save the post data in the model
         post = models.Post(author=author, group=group, contents=post_contents)
         post.save()
 
-        return redirect(reverse('basic_app:group_detail', kwargs={ 'pk': group_pk }))
+        return redirect(groupDetailPath)
 
 class DeletePost(DeleteView):
     template_name = 'post_confirm_delete.html'
