@@ -1,6 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, UserManager
 
+# add case insensitivity upon searching usernames in the user auth model
+class CustomUserManager(UserManager):
+    def get_by_natural_key(self, username):
+        case_insensitive_username_field = '{}__iexact'.format(self.model.USERNAME_FIELD)
+        return self.get(**{case_insensitive_username_field: username})
+
 # use django's built in user authentication
 class User(AbstractBaseUser):
     username = models.CharField(max_length=20, unique=True)
@@ -9,7 +15,7 @@ class User(AbstractBaseUser):
     max_groups = models.PositiveIntegerField(default=5)
     # last login is included by default
 
-    objects = UserManager()
+    objects = CustomUserManager()
 
     USERNAME_FIELD = 'username'
     
