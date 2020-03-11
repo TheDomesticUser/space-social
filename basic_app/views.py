@@ -150,24 +150,27 @@ class GroupDetailView(DetailView):
         # call the base implementation first to be able to set key values
         context = super().get_context_data(**kwargs)
 
-        # get the user and group
-        user = self.request.user
         group = self.get_object()
 
-        # verify if the user is not in the group. If not, display join group btn
-        assn = models.Association.objects.filter(
-            member=user,
-            group=group
-        ).first()
+        # render different details if user is anonymous
+        if self.request.user.is_authenticated:
+            # get the user and group
+            user = self.request.user
+
+            # verify if the user is not in the group. If not, display join group btn
+            assn = models.Association.objects.filter(
+                member=user,
+                group=group
+            ).first()
+
+            if assn:
+                context['already_joined'] = True
 
         # get all of the posts in the group
         groupPosts = models.Post.objects.filter(group=group)
 
-        if assn:
-            context['already_joined'] = True
-            context['posts_list'] = groupPosts
+        context['posts_list'] = groupPosts
 
-            return context
         return context
 
 class DeleteGroup(LoginRequiredMixin, DeleteView):
@@ -262,7 +265,7 @@ class LeaveGroup(LoginRequiredMixin, TemplateView):
 
         return redirect(reverse('basic_app:groups_list'))
 
-class CreatePost(View):
+class CreatePost(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         group_pk = kwargs['pk']
 
@@ -285,7 +288,7 @@ class CreatePost(View):
 
         return redirect(groupDetailPath)
 
-class DeletePost(DeleteView):
+class DeletePost(LoginRequiredMixin, DeleteView):
     template_name = 'post_confirm_delete.html'
 
     model = models.Post
