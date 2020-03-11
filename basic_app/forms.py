@@ -30,7 +30,7 @@ class SignUpForm(ModelForm):
         model = models.User
         fields = ('username', 'password')
 
-    def clean(self):
+    def clean_verify_password(self):
         cleaned_data = super().clean()
         
         password = cleaned_data.get('password')
